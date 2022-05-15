@@ -604,7 +604,7 @@ impl JingleSession {
                 caps = caps
                   .field("media", "audio")
                   .field("encoding-name", "OPUS")
-                  .field("clock-rate", 48000);
+                  .field("clock-rate", 48000 as i32);
                 if let Some(hdrext) = audio_hdrext_ssrc_audio_level {
                   caps = caps.field(&format!("extmap-{}", hdrext), RTP_HDREXT_SSRC_AUDIO_LEVEL);
                 }
@@ -616,7 +616,7 @@ impl JingleSession {
                 // A video codec, as the only audio codec we support is Opus.
                 caps = caps
                   .field("media", "video")
-                  .field("clock-rate", 90000)
+                  .field("clock-rate", 90000 as i32)
                   .field("encoding-name", codec.encoding_name())
                   .field("rtcp-fb-nack-pli", true);
                 if let Some(hdrext) = video_hdrext_transport_cc {
@@ -628,7 +628,7 @@ impl JingleSession {
             else if codec.is_rtx(pt) {
               caps = caps
                 .field("media", "video")
-                .field("clock-rate", 90000)
+                .field("clock-rate", 90000 as i32)
                 .field("encoding-name", "RTX")
                 .field("apt", codec.pt);
               return Ok(Some(caps.build()));
