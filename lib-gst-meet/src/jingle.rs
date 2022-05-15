@@ -1386,7 +1386,7 @@ impl JingleSession {
       }
       else {
         vec![jingle_ssma::Group {
-          semantics: Semantics::Fid,
+          semantics: jingle_ssma::Semantics::Fid,
           sources: vec![
             jingle_ssma::Source::new(video_ssrc),
             jingle_ssma::Source::new(video_rtx_ssrc),
