@@ -6,7 +6,9 @@ use xmpp_parsers::{iq::IqGetPayload, Element};
 use crate::xmpp::ns;
 
 #[derive(Debug)]
-pub(crate) struct ServicesQuery {}
+pub(crate) struct ServicesQuery {
+    pub(crate) ns: ns::EXTDISCO
+}
 
 impl TryFrom<Element> for ServicesQuery {
   type Error = anyhow::Error;
@@ -17,8 +19,12 @@ impl TryFrom<Element> for ServicesQuery {
 }
 
 impl From<ServicesQuery> for Element {
-  fn from(_services: ServicesQuery) -> Element {
-    let builder = Element::builder("services", ns::EXTDISCO);
+  fn from(services: ServicesQuery) -> Element {
+    let ns = match services.ns {
+      ns::EXTDISCO::ONE => ns::EXTDISCO_ONE,
+      ns::EXTDISCO::TWO => ns::EXTDISCO_TWO,
+    };
+    let builder = Element::builder("services", ns);
     builder.build()
   }
 }
@@ -47,7 +53,7 @@ impl TryFrom<Element> for ServicesResult {
   type Error = anyhow::Error;
 
   fn try_from(elem: Element) -> Result<ServicesResult> {
-    if !elem.is("services", ns::EXTDISCO) {
+    if !(elem.is("services", ns::EXTDISCO_ONE) || elem.is("services", ns::EXTDISCO_TWO)) {
       bail!("not a services element");
     }
     Ok(ServicesResult {
